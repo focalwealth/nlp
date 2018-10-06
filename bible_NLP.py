@@ -1,7 +1,8 @@
 import nltk
+#import urlopen
 import pandas as pd
 #import numpy
-#from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 from nltk.tokenize import word_tokenize
 from nltk.stem.porter import *
 from sklearn.feature_extraction.text import TfidfVectorizer as tfidf
@@ -100,6 +101,8 @@ def run_random_forest_classifier():
     print ("F1 score: {}".format(f1_score(y_test,prediction, average= 'micro')))
     print ("Confusion Matrix: ")
     print (confusion_matrix(y_test, prediction))
+    print("Below is the prediction")
+    print(clfrf.predict(new_test.toarray()))
     return True
 
 
@@ -108,6 +111,8 @@ def run_nb_classifier():
     clfnb= GaussianNB()
     clfnb.fit(X_train, y_train)
     prediction = clfnb.predict(X_test)
+    print(" new pred")
+    print(clfnb.predict(new_test.toarray()))
     print ("Model Accuracy for cross validation - ", np.mean(cross_val_score(clfnb, X_test, y_test, cv=10)))
     print ("Accuracy of the model on testing data: {}% ".format(accuracy_score(y_test, prediction) * 100))
     print ("F1 score: {}".format(f1_score(y_test, prediction, average='micro')))
@@ -128,9 +133,17 @@ if __name__ == "__main__":
     y_train=tags
     X_test= dtm.iloc[0:31,:]
     y_test= tags[0:31]
+    txt = """Michel Salama HerszageComcast adquire mais de 75% das ações da Sky Operação movimentou US$ 40 bilhões  A Comcast informou que garantiu mais de 75 por cento das ações da Sky, aproximando-se de finalizar a aquisição do grupo britânico de TV paga por 40 bilhões de dólares.  A empresa norte-americana de televisão a cabo Comcast disse anteriormente que espera que a aquisição seja concluída até o final de outubro.  No mês passado, a Comcast emergiu triunfante na longa batalha pela Sky depois de uma disputa com a Twenty-
+8:51 PMMichel Salama HerszageFirst Century Fox, de Rupert Murdoch, em um leilão.  A Comcast informou em comunicado nesta quinta-feira que, até 9 de outubro, quando concluir a compra da participação de 39 por cento da Twenty-First Century Fox, já manterá ou terá recebido aceitações em mais de 75 por cento do capital social da Sky.  A empresa disse que um novo anúncio será feito no devido tempo. """
+    dft = pd.DataFrame({"Data": [txt], "Tag": ['M']})
+    clean_text_test, tags_test = cleaner(dft)
+    new_test = cv.transform(clean_text_test)
+    # print(new_test)
     run_random_forest_classifier()
     run_nb_classifier()
     print (dtm.shape)
-    print (set(tags))
+    check=list(set(dsi_df["Tag"]))
+    for item in check:
+        print(item, len(dsi_df[dsi_df["Tag"]==item]))
     # for t in list(set(pd.Series(tags))):
     #     print(t, tags[tags == t].count())
