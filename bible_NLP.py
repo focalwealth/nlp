@@ -11,7 +11,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score, f1_score
 import numpy as np
 from sklearn.model_selection import cross_val_score
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianN beiB
 #import os
 
 
